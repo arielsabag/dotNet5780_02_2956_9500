@@ -8,8 +8,8 @@ namespace dotNet5780_02_2956_9500
 {
     public class GuestRequest
     {
-        public string EntryDate { get; set; }
-        public string ReleaseDate { get; set; }
+        public DateTime EntryDate { get; set; }
+        public DateTime ReleaseDate { get; set; }
         public bool IsApproved { get; set; }
 
         public override string ToString()

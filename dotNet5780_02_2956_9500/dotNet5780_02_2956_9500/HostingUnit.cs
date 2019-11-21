@@ -10,28 +10,32 @@ namespace dotNet5780_02_2956_9500
     class HostingUnit : IComparable
     {
         private static int stSerialKey = 0;
+        bool[,] Diary = new bool[12, 31];
 
         private int hostingUnitKey;
+        public int HostingUnitKey
+        {
+            get { return hostingUnitKey; }
+        }
+
         /// <summary>
         /// This Ctor allocates an 8 digits hosting unit key for the object 
         /// </summary>
         public HostingUnit()
         {
             hostingUnitKey = ++stSerialKey;
-        }
-        public int HostingUnitKey
-        {
-            get { return hostingUnitKey; }
+
         }
 
-        bool[,] Diary = new bool[12, 31];
+       
+
+
+
 
         public override string ToString()
         {
             return "Hosting unit key: " + hostingUnitKey + "/n" + printSchedule(Diary);
         }
-
-
 
         /// <summary>
         ///  The function prints out for each hosting period it's first and last dayof hosting.
@@ -79,41 +83,42 @@ namespace dotNet5780_02_2956_9500
             }
             return toReturn;
         }
+
         /// <summary>
         /// Function that add hosting period by user's requirments.
         /// </summary>
         /// <param name="Calendar">Calendaris the data base in which the hosting scedule saved inside</param>
-        private static bool addVacation(bool[,] Calendar)
+        public  bool ApprovedRequest(GuestRequest guestReq)
         {
             bool free = false;
 
             int month, tmpMonth, day, tmpDay, length;
             bool occupied;
 
+            
             occupied = false;
             Console.WriteLine("enter day");
-            day = Int32.Parse(Console.ReadLine());
+            day = guestReq.EntryDate.Day;
             tmpDay = day;
 
             Console.WriteLine("enter month");
-            month = Int32.Parse(Console.ReadLine());
+            month = guestReq.EntryDate.Month;
             tmpMonth = month;
 
             Console.WriteLine("enter length");
-            length = Int32.Parse(Console.ReadLine());
-
+            length = (guestReq.ReleaseDate - guestReq.EntryDate).Days;
 
             // If length = 1 and the first day is occiupied
-            if ((1 == length) && (Calendar[month - 1, day - 1]))
+            if ((1 == length) && (Diary[month - 1, day - 1]))
             {
                 if (32 == day + length)
                 {
-                    if (Calendar[month, 0])
+                    if (Diary[month, 0])
                     {
                         occupied = true;
                     }
                 }
-                else if (Calendar[month - 1, day])
+                else if (Diary[month - 1, day])
                 {
                     occupied = true;
                 }
@@ -127,7 +132,7 @@ namespace dotNet5780_02_2956_9500
                         tmpMonth++;
                         tmpDay = (tmpDay + i) % 31;
                     }
-                    if (Calendar[tmpMonth - 1, tmpDay])
+                    if (Diary[tmpMonth - 1, tmpDay])
                     {
                         occupied = true;
                     }
@@ -145,7 +150,7 @@ namespace dotNet5780_02_2956_9500
                 //Console.WriteLine("your request has been approved");
                 tmpDay = day;
                 tmpMonth = month;
-                Calendar[tmpMonth - 1, day - 1] = true;
+                Diary[tmpMonth - 1, day - 1] = true;
                 for (int i = 0, j = 0; i < length - 1; i++, j++) // iterate on all days and check if available
                 {
                     if (tmpDay + j > 30)
@@ -154,11 +159,12 @@ namespace dotNet5780_02_2956_9500
                         tmpDay = 0;
                         j = 0;
                     }
-                    Calendar[tmpMonth - 1, tmpDay + j] = true;
+                    Diary[tmpMonth - 1, tmpDay + j] = true;
                 }
             }
             if (free)
             {
+                guestReq.IsApproved = true;
                 return true;
             }
             else
@@ -166,11 +172,12 @@ namespace dotNet5780_02_2956_9500
                 return false;
             }
         }
+
         /// <summary>
         /// The function prints out the number of occupied days out of the whole year, and it's percentage.
         /// </summary>
         /// <param name="Calendar">Calendaris the data base in which the hosting scedule saved inside</param>
-        private  int GetAnnualBusyDays()
+        public  int GetAnnualBusyDays()
         {
             int countOccpiedDays = 0;
             for (int i = 0; i < 12; i++)
@@ -186,11 +193,12 @@ namespace dotNet5780_02_2956_9500
             return countOccpiedDays;
             
         }
+
         /// <summary>
         /// The function prints out the number of occupied days out of the whole year, and it's percentage.
         /// </summary>
         /// <param name="Calendar">Calendaris the data base in which the hosting scedule saved inside</param>
-        private  float GetAnnualBusyPercentage()
+        public  float GetAnnualBusyPercentage()
         {
             float countOccpiedDays = 0;
             for (int i = 0; i < 12; i++)
@@ -212,5 +220,4 @@ namespace dotNet5780_02_2956_9500
             return GetAnnualBusyDays().CompareTo(((HostingUnit)obj).GetAnnualBusyDays());
         }
     }
-
 }
