@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace dotNet5780_02_2956_9500
 {
-    class HostingUnit : IComparable
+    public class HostingUnit : IComparable
     {
         private static int stSerialKey = 0;
         bool[,] Diary = new bool[12, 31];
@@ -23,7 +23,7 @@ namespace dotNet5780_02_2956_9500
         /// </summary>
         public HostingUnit()
         {
-            hostingUnitKey = ++stSerialKey;
+            hostingUnitKey = stSerialKey++;
 
         }
 
@@ -87,7 +87,7 @@ namespace dotNet5780_02_2956_9500
         /// <summary>
         /// Function that add hosting period by user's requirments.
         /// </summary>
-        /// <param name="Calendar">Calendaris the data base in which the hosting scedule saved inside</param>
+        /// <param name="Calendar">Calendar is the data base in which the hosting scedule saved inside</param>
         public  bool ApprovedRequest(GuestRequest guestReq)
         {
             bool free = false;
@@ -127,7 +127,7 @@ namespace dotNet5780_02_2956_9500
             {
                 for (int i = 0; i < length - 1; i++) // iterate on all days and check if available
                 {
-                    if (tmpDay + i > 30)
+                    if (tmpDay + i > 30&&tmpMonth<12)
                     {
                         tmpMonth++;
                         tmpDay = (tmpDay + i) % 31;
@@ -155,6 +155,7 @@ namespace dotNet5780_02_2956_9500
                 {
                     if (tmpDay + j > 30)
                     {
+                        if(tmpMonth<12)
                         tmpMonth++;
                         tmpDay = 0;
                         j = 0;
@@ -198,7 +199,7 @@ namespace dotNet5780_02_2956_9500
         /// The function prints out the number of occupied days out of the whole year, and it's percentage.
         /// </summary>
         /// <param name="Calendar">Calendaris the data base in which the hosting scedule saved inside</param>
-        public  float GetAnnualBusyPercentage()
+        public float GetAnnualBusyPercentage()
         {
             float countOccpiedDays = 0;
             for (int i = 0; i < 12; i++)
