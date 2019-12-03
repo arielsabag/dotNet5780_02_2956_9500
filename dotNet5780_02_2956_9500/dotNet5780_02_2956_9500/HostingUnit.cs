@@ -7,16 +7,29 @@ using System.Threading.Tasks;
 
 namespace dotNet5780_02_2956_9500
 {
+    /// <summary>
+    /// The class HostingUnit represents hosting unit
+    /// </summary>
     public class HostingUnit : IComparable
     {
+        /// <summary>
+        /// Number of accommodation unit unique identifier for each object of the class 5 digit running code
+        /// </summary>
         private static int stSerialKey = 0;
-        bool[,] Diary = new bool[12, 31];
 
+        /// <summary>
+        ///  Number of current hosting unit גetermined in the constructor according to the static field
+        /// </summary>
         private int hostingUnitKey;
         public int HostingUnitKey
         {
             get { return hostingUnitKey; }
         }
+        /// <summary>
+        /// The status of the accommodation unit for one year (12-month x 31-day matrix,
+        /// For each day check if the unit is free / tonnage)
+        /// </summary>
+        bool[,] Diary = new bool[12, 31];
 
         /// <summary>
         /// This Ctor allocates an 8 digits hosting unit key for the object 
@@ -27,75 +40,35 @@ namespace dotNet5780_02_2956_9500
 
         }
 
-       
-
-
-
-
+        /// <summary>
+        /// Displays for the unit its serial number, and 
+        /// The list of periods in which it is occupied. ( First Date and End for each Period)
+        /// </summary>
+        /// <returns>the unit serial number and The list of periods in which it is occupied. ( First Date and End for each Period) </returns>
         public override string ToString()
         {
             return "Hosting unit key: " + hostingUnitKey + "\n" + printSchedule(Diary);
         }
 
-        /// <summary>
-        ///  The function prints out for each hosting period it's first and last dayof hosting.
-        /// </summary>
-        /// <param name="Calendar">Calendaris the data base in which the hosting scedule saved inside</param>
-        private static string printSchedule(bool[,] Calendar)
-        {
-            string toReturn = string.Empty;
-            ArrayList tmpArr = new ArrayList();
-            for (int i = 0; i < 12; i++)
-            {
-                for (int j = 0; j < 31; j++)
-                {
-                    if (Calendar[i, j])
-                    {
-                        tmpArr.Add((j + 1) + "/" + (i + 1));
-                    }
-                    else
-                    {
-                        tmpArr.Add("empty");
-                    }
-                }
-            }
-            int state = 0;
-            for (int i = 0; i < tmpArr.Count; i++)
-            {
-                if ((i == 0) && (tmpArr[i].ToString() != "empty"))
-                {
-                    toReturn += tmpArr[i].ToString() + " - ";
-                   // Console.Write(tmpArr[i].ToString() + " - ");
-                    state++;
-                }
-                else if ((tmpArr[i].ToString() != "empty") && (state % 2 == 0))
-                {
-                    toReturn += tmpArr[i].ToString() + " - ";
-                    //Console.Write(tmpArr[i].ToString() + " - ");
-                    state++;
-                }
-                else if ((tmpArr[i].ToString() == "empty") && (state % 2 == 1))
-                {
-                    state++;
-                    toReturn += tmpArr[i - 1].ToString();
-                    //Console.WriteLine(tmpArr[i - 1].ToString());
-                }
-            }
-            return toReturn;
-        }
+
+        /// <param name="Calendar">Calendar is the data base in which the hosting scedule saved inside</param>
 
         /// <summary>
-        /// Function that add hosting period by user's requirments.
+        /// Accepts hosting requirement. If the matrix has a sequence of 
+        /// Free days in accordance with the above requirement, the function indicates in the matrix that the unit was captured, 
+        /// And signifies within the request itself that the request was approved(IsApproved = true)
         /// </summary>
-        /// <param name="Calendar">Calendar is the data base in which the hosting scedule saved inside</param>
-        public  bool ApprovedRequest(GuestRequest guestReq)
+        /// <param name="guestReq"></param>
+        /// <returns> Returns true if the matrix has a sequence of Free days in accordance with the above requirement,
+        /// If the requested dates are not available(even in part), returns "false". </returns>
+        public bool ApprovedRequest(GuestRequest guestReq)
         {
             bool free = false;
 
             int month, tmpMonth, day, tmpDay, length;
             bool occupied;
 
-            
+
             occupied = false;
             Console.WriteLine("enter day");
             day = guestReq.EntryDate.Day;
@@ -127,7 +100,7 @@ namespace dotNet5780_02_2956_9500
             {
                 for (int i = 0; i < length - 1; i++) // iterate on all days and check if available
                 {
-                    if (tmpDay + i > 30&&tmpMonth<12)
+                    if (tmpDay + i > 30 && tmpMonth < 12)
                     {
                         tmpMonth++;
                         tmpDay = (tmpDay + i) % 31;
@@ -141,12 +114,12 @@ namespace dotNet5780_02_2956_9500
             if (occupied)
             {
                 free = false;
-               // Console.WriteLine("the request was denied");
+                // Console.WriteLine("the request was denied");
             }
             else
             {
                 free = true;
-                
+
                 //Console.WriteLine("your request has been approved");
                 tmpDay = day;
                 tmpMonth = month;
@@ -155,8 +128,8 @@ namespace dotNet5780_02_2956_9500
                 {
                     if (tmpDay + j > 30)
                     {
-                        if(tmpMonth<12)
-                        tmpMonth++;
+                        if (tmpMonth < 12)
+                            tmpMonth++;
                         tmpDay = 0;
                         j = 0;
                     }
@@ -174,11 +147,63 @@ namespace dotNet5780_02_2956_9500
             }
         }
 
+
+
+
+        /// <summary>
+        ///  The function prints out for each hosting period it's first and last dayof hosting.
+        /// </summary>
+        /// <param name="Calendar">Calendaris the data base in which the hosting scedule saved inside</param>
+        private static string printSchedule(bool[,] Calendar)
+        {
+            string toReturn = string.Empty;
+            ArrayList tmpArr = new ArrayList();
+            for (int i = 0; i < 12; i++)
+            {
+                for (int j = 0; j < 31; j++)
+                {
+                    if (Calendar[i, j])
+                    {
+                        tmpArr.Add((j + 1) + "/" + (i + 1));
+                    }
+                    else
+                    {
+                        tmpArr.Add("empty");
+                    }
+                }
+            }
+            int state = 0;
+            for (int i = 0; i < tmpArr.Count; i++)
+            {
+                if ((i == 0) && (tmpArr[i].ToString() != "empty"))
+                {
+                    toReturn += tmpArr[i].ToString() + " - ";
+                    // Console.Write(tmpArr[i].ToString() + " - ");
+                    state++;
+                }
+                else if ((tmpArr[i].ToString() != "empty") && (state % 2 == 0))
+                {
+                    toReturn += tmpArr[i].ToString() + " - ";
+                    //Console.Write(tmpArr[i].ToString() + " - ");
+                    state++;
+                }
+                else if ((tmpArr[i].ToString() == "empty") && (state % 2 == 1))
+                {
+                    state++;
+                    toReturn += tmpArr[i - 1].ToString();
+                    //Console.WriteLine(tmpArr[i - 1].ToString());
+                }
+            }
+            return toReturn;
+        }
+
+
+
         /// <summary>
         /// The function prints out the number of occupied days out of the whole year, and it's percentage.
         /// </summary>
         /// <param name="Calendar">Calendaris the data base in which the hosting scedule saved inside</param>
-        public  int GetAnnualBusyDays()
+        public int GetAnnualBusyDays()
         {
             int countOccpiedDays = 0;
             for (int i = 0; i < 12; i++)
@@ -192,7 +217,7 @@ namespace dotNet5780_02_2956_9500
                 }
             }
             return countOccpiedDays;
-            
+
         }
 
         /// <summary>
@@ -212,8 +237,8 @@ namespace dotNet5780_02_2956_9500
                     }
                 }
             }
-           
-          return  countOccpiedDays / 372;
+
+            return countOccpiedDays / 372;
         }
 
         public int CompareTo(object obj)
