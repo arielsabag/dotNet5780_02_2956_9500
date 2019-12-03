@@ -100,18 +100,25 @@ namespace dotNet5780_02_2956_9500
         /// <returns>If the Hosting Unit exists it is return it's object, otherwise NULL will be returned</returns>
         public HostingUnit this[int serialNumber]
         {
+
+
             get
             {
-                for (int i = 0; i < HostingUnitCollection.Count; i++)
-                {
-                    if (HostingUnitCollection.ElementAt(i).HostingUnitKey == serialNumber)
+                
+                    for (int i = 0; i < HostingUnitCollection.Count; i++)
                     {
-                        return HostingUnitCollection.ElementAt(i);
-                    }
-                }
+                   
+                        if (HostingUnitCollection.ElementAt(i).HostingUnitKey == serialNumber)
+                        {
+                            return HostingUnitCollection.ElementAt(i);
+                        }
+                    
+                   
 
-                return null;
-            }
+                    return null;
+
+                }
+                
         }
 
 

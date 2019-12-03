@@ -13,7 +13,7 @@ namespace dotNet5780_02_2956_9500
         {
             GuestRequest gs = new GuestRequest();
 
-            DateTime tmpEntryDate = new DateTime(DateTime.Now.Year,rand.Next(1,13), rand.Next(1, 28));
+            DateTime tmpEntryDate = new DateTime(DateTime.Now.Year, rand.Next(1, 13), rand.Next(1, 28));
 
             gs.EntryDate = tmpEntryDate;
             gs.ReleaseDate = tmpEntryDate.AddDays(rand.Next(2, 11));
@@ -23,6 +23,8 @@ namespace dotNet5780_02_2956_9500
         }
         static void Main(string[] args)
         {
+            try
+            { 
             List<Host> lsHosts;
             lsHosts = new List<Host>()
                             {
@@ -36,7 +38,6 @@ namespace dotNet5780_02_2956_9500
             {
                 foreach (var host in lsHosts)
                 {
-
                     GuestRequest gs1 = CreateRandomRequest();
                     GuestRequest gs2 = CreateRandomRequest();
                     GuestRequest gs3 = CreateRandomRequest();
@@ -71,26 +72,37 @@ namespace dotNet5780_02_2956_9500
             //get max value key name in dictionary
             long maxKey =
            dict.FirstOrDefault(x => x.Value == dict.Values.Max()).Key;
-            //find the Host that its unit has the maximum occupancy percentage
-            foreach (var host in lsHosts)
-            {
-                //test indexer of Host
-                for (int i = 0; i < host.HostingUnitCollection.Count; i++)
+                //find the Host that its unit has the maximum occupancy percentage
+                foreach (var host in lsHosts)
                 {
-                    if (host[i].HostingUnitKey == maxKey)
+
+
+                    //test indexer of Host
+                    for (int i = 0; i < host.HostingUnitCollection.Count; i++)
                     {
-                        //sort this host by occupancy of its units
-                        host.SortUnits();
+
+
+
+
+
+
+                        if (host[i].HostingUnitKey == maxKey)
+                        {
+                            //sort this host by occupancy of its units
+                            host.SortUnits();
+                        }
+
                         //print this host detailes
                         Console.WriteLine("**** Details of the Host with the most occupied unit:\n");
-
-
                         Console.WriteLine(host);
                         break;
+
                     }
                 }
+                    
+                    
+                }
             }
-
             Console.ReadKey();
         }
     }

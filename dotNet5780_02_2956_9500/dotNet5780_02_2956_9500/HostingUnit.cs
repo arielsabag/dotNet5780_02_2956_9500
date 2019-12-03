@@ -34,7 +34,7 @@ namespace dotNet5780_02_2956_9500
 
         public override string ToString()
         {
-            return "Hosting unit key: " + hostingUnitKey + "/n" + printSchedule(Diary);
+            return "Hosting unit key: " + hostingUnitKey + "\n" + printSchedule(Diary);
         }
 
         /// <summary>
