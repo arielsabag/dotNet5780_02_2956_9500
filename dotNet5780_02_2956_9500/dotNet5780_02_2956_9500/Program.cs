@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,19 +12,14 @@ namespace dotNet5780_02_2956_9500
         private static GuestRequest CreateRandomRequest()
         {
             GuestRequest gs = new GuestRequest();
-
             DateTime tmpEntryDate = new DateTime(DateTime.Now.Year, rand.Next(1, 13), rand.Next(1, 28));
-
             gs.EntryDate = tmpEntryDate;
             gs.ReleaseDate = tmpEntryDate.AddDays(rand.Next(2, 11));
-
             //Fill randomally the Entry and Release dates of gs
             return gs;
         }
         static void Main(string[] args)
         {
-            try
-            { 
             List<Host> lsHosts;
             lsHosts = new List<Host>()
                             {
@@ -71,36 +66,25 @@ namespace dotNet5780_02_2956_9500
             float maxVal = dict.Values.Max();
             //get max value key name in dictionary
             long maxKey =
-           dict.FirstOrDefault(x => x.Value == dict.Values.Max()).Key;
-                //find the Host that its unit has the maximum occupancy percentage
-                foreach (var host in lsHosts)
+            dict.FirstOrDefault(x => x.Value == dict.Values.Max()).Key;
+            //find the Host that its unit has the maximum occupancy percentage
+            foreach (var host in lsHosts)
+            {
+                //test indexer of Host
+                for (int i = 0; i < host.HostingUnitCollection.Count; i++)
                 {
-
-
-                    //test indexer of Host
-                    for (int i = 0; i < host.HostingUnitCollection.Count; i++)
+                    if (host[i] != null)
                     {
-
-
-
-
-
-
                         if (host[i].HostingUnitKey == maxKey)
                         {
                             //sort this host by occupancy of its units
                             host.SortUnits();
                         }
-
-                        //print this host detailes
-                        Console.WriteLine("**** Details of the Host with the most occupied unit:\n");
-                        Console.WriteLine(host);
-                        break;
-
                     }
-                }
-                    
-                    
+                    //print this host detailes
+                    Console.WriteLine("**** Details of the Host with the most occupied unit:\n");
+                    Console.WriteLine(host);
+                    break;
                 }
             }
             Console.ReadKey();
