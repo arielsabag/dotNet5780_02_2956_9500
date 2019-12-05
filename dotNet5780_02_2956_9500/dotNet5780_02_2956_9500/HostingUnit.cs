@@ -51,7 +51,7 @@ namespace dotNet5780_02_2956_9500
         }
 
 
-        /// <param name="Calendar">Calendar is the data base in which the hosting scedule saved inside</param>
+         /// <param name="Calendar">Calendar is the data base in which the hosting scedule saved inside</param>
 
         /// <summary>
         /// Accepts hosting requirement. If the matrix has a sequence of 
@@ -63,88 +63,92 @@ namespace dotNet5780_02_2956_9500
         /// If the requested dates are not available(even in part), returns "false". </returns>
         public bool ApprovedRequest(GuestRequest guestReq)
         {
-            bool free = false;
+            bool outOfRange = false, occupied = false; 
+            int month, day, length;
+            //List<bool> diaryArray = new List<bool>();
+            int index = 1;
+            //diaryArray.Add(false);
+            bool[] diaryArray = new bool[31*12+1];
 
-            int month, tmpMonth, day, tmpDay, length;
-            bool occupied;
+            for (int i = 0; i < 31 * 12 + 1; i++)
+            {
 
+                diaryArray[index] = false;
+                
+            }
 
-            occupied = false;
-            Console.WriteLine("enter day");
+            for (int i = 0; i < 12; i++)
+            {
+                for (int j = 0; j < 31; j++)
+                {
+                    diaryArray[index] = Diary[i, j];
+                    index++;
+                }
+            }
+
             day = guestReq.EntryDate.Day;
-            tmpDay = day;
-
-            Console.WriteLine("enter month");
             month = guestReq.EntryDate.Month;
-            tmpMonth = month;
-
-            Console.WriteLine("enter length");
             length = (guestReq.ReleaseDate - guestReq.EntryDate).Days;
+            int tmpDay = day, tmpMonth = month;
 
-            // If length = 1 and the first day is occiupied
+
             if ((1 == length) && (Diary[month - 1, day - 1]))
             {
-                if (32 == day + length)
+                if (((((tmpMonth - 1) * 31) + tmpDay) + 1) == (31 * 12 + 1))
                 {
-                    if (Diary[month, 0])
-                    {
-                        occupied = true;
-                    }
+                    return false;
                 }
-                else if (Diary[month - 1, day])
+                if (diaryArray.ElementAt((((month - 1) * 31) + day) + 1))
                 {
                     occupied = true;
                 }
             }
             else
             {
-                for (int i = 0; i < length - 1; i++) // iterate on all days and check if available
+                for (int i = 0; i < length; i++,tmpDay++) // iterate on all days and check if available
                 {
-                    if (tmpDay + i > 30 && tmpMonth < 12)
+                    if (((((tmpMonth - 1) * 31) + tmpDay) + 1)==(31*12+1))
                     {
-                        tmpMonth++;
-                        tmpDay = (tmpDay + i) % 31;
+                        outOfRange = true;
+                        break;
                     }
-                    if (Diary[tmpMonth - 1, tmpDay])
+                    if (diaryArray.ElementAt((((tmpMonth - 1) * 31) + tmpDay) + 1))
                     {
                         occupied = true;
                     }
                 }
             }
-            if (occupied)
+            tmpDay = day;
+            tmpMonth = month;
+
+            if (outOfRange)
             {
-                free = false;
-                // Console.WriteLine("the request was denied");
+                return false; // out of range
             }
             else
             {
-                free = true;
-
-                //Console.WriteLine("your request has been approved");
-                tmpDay = day;
-                tmpMonth = month;
-                Diary[tmpMonth - 1, day - 1] = true;
-                for (int i = 0, j = 0; i < length - 1; i++, j++) // iterate on all days and check if available
+                if (occupied)
                 {
-                    if (tmpDay + j > 30)
+                    return false;
+                    // Console.WriteLine("the request was denied");
+                }
+                else
+                {
+                    if (1 == length)
                     {
-                        if (tmpMonth < 12)
-                            tmpMonth++;
-                        tmpDay = 0;
-                        j = 0;
+                        diaryArray[((((month - 1) * 31) + day) + 1)] = true;
                     }
-                    Diary[tmpMonth - 1, tmpDay + j] = true;
+                    else
+                    {
+                        for (int i = 0; i < length; i++, tmpDay++) // iterate on all days and check if available
+                        {
+                            diaryArray[((((tmpMonth - 1) * 31) + tmpDay) + 1)] = true;
+                        }
+                    }
                 }
             }
-            if (free)
-            {
-                guestReq.IsApproved = true;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            guestReq.IsApproved = true;
+            return true;
         }
 
 
