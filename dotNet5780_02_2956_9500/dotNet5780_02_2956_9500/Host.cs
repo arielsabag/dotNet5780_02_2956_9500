@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
@@ -7,16 +7,22 @@ using System.Threading.Tasks;
 
 namespace dotNet5780_02_2956_9500
 {
+
     public class Host:IEnumerable
     {
-        public int HostKey { get; set; }
-        public List<HostingUnit> HostingUnitCollection;
+        public int HostKey { get; set; } // Id number of the Host
+        public List<HostingUnit> HostingUnitCollection; // list of hosting units of the Host
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="hostingUnitAmount"></param>
         public Host(int id,int hostingUnitAmount)
         {
             HostKey = id;
             HostingUnitCollection = new List<HostingUnit>();
-            for (int i = 0; i < hostingUnitAmount; i++)
+            for (int i = 0; i < hostingUnitAmount; i++) // Initialize the List so that all the units are free
             {
                 HostingUnitCollection.Add(new HostingUnit());
             }
@@ -45,7 +51,6 @@ namespace dotNet5780_02_2956_9500
                     return HostingUnitCollection.ElementAt(index).HostingUnitKey;
                 }
                 index++;
-
             }
             return -1;
         }
@@ -100,27 +105,18 @@ namespace dotNet5780_02_2956_9500
         /// <returns>If the Hosting Unit exists it is return it's object, otherwise NULL will be returned</returns>
         public HostingUnit this[int serialNumber]
         {
-
-
             get
             {
-                
-                    for (int i = 0; i < HostingUnitCollection.Count; i++)
+                for (int i = 0; i < HostingUnitCollection.Count; i++)
+                {
+                    if (HostingUnitCollection.ElementAt(i).HostingUnitKey == serialNumber)
                     {
-                   
-                        if (HostingUnitCollection.ElementAt(i).HostingUnitKey == serialNumber)
-                        {
-                            return HostingUnitCollection.ElementAt(i);
-                        }
-                    
-                   
-
-                    return null;
-
+                        return HostingUnitCollection.ElementAt(i);
+                    }
                 }
-                
+                    return null;
+                }           
         }
-
 
         public IEnumerator GetEnumerator()
         {
@@ -128,7 +124,6 @@ namespace dotNet5780_02_2956_9500
             {
                 yield return val;
             }
-
         }
     }
 
