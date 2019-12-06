@@ -15,7 +15,7 @@ namespace dotNet5780_02_2956_9500
         public DateTime EntryDate { get; set; }
         public DateTime ReleaseDate { get; set; }
         /// <summary>
-        /// Indicates if the request approved
+        /// Indicates  if the request approved
         /// </summary>
         public bool IsApproved { get; set; }
 
