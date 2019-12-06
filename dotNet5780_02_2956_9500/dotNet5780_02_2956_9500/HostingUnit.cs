@@ -47,7 +47,7 @@ namespace dotNet5780_02_2956_9500
         /// <returns>the unit serial number and The list of periods in which it is occupied. ( First Date and End for each Period) </returns>
         public override string ToString()
         {
-            return "Hosting unit key: " + hostingUnitKey + "\n" +"" /*printSchedule(Diary)*/;
+            return "Hosting unit key: " + hostingUnitKey + "\n" + printSchedule();
         }
 
 
@@ -128,6 +128,14 @@ namespace dotNet5780_02_2956_9500
                         diaryArray[((((tmpMonth - 1) * 31) + tmpDay) + 1)] = true;
                     }
                 }
+
+                for (int i = 0, index = 1; i < 12; i++)
+                {
+                    for (int j = 0; j < 31; j++, index++)
+                    {
+                        Diary[i, j] = diaryArray[index];
+                    }
+                }
                 guestReq.IsApproved = true;// marks the bool field 'isApproved' ofguestRequest as 'true'
                 return true; // the request accepted
             }
@@ -185,58 +193,49 @@ namespace dotNet5780_02_2956_9500
         }
 
 
-        ///// <summary>
-        /////  The function prints out for each hosting period it's first and last dayof hosting.
-        ///// </summary>
-        ///// <param name="Calendar">Calendaris the data base in which the hosting scedule saved inside</param>
-        //private static string printSchedule(bool[,] Calendar)
-        //{
-        //    string toReturn = string.Empty;
-        //    ArrayList tmpArr = new ArrayList();
-        //    for (int i = 0; i < 12; i++)
-        //    {
-        //        for (int j = 0; j < 31; j++)
-        //        {
-        //            if (Calendar[i, j])
-        //            {
-        //                tmpArr.Add((j + 1) + "/" + (i + 1));
-        //            }
-        //            else
-        //            {
-        //                tmpArr.Add("empty");
-        //            }
-        //        }
-        //    }
-        //    int state = 0;
-        //    for (int i = 0; i < tmpArr.Count; i++)
-        //    {
-        //        if ((i == 0) && (tmpArr[i].ToString() != "empty"))
-        //        {
-        //            toReturn += tmpArr[i].ToString() + " - ";
-        //            // Console.Write(tmpArr[i].ToString() + " - ");
-        //            state++;
-        //        }
-        //        else if ((tmpArr[i].ToString() != "empty") && (state % 2 == 0))
-        //        {
-        //            toReturn += tmpArr[i].ToString() + " - ";
-        //            //Console.Write(tmpArr[i].ToString() + " - ");
-        //            state++;
-        //        }
-        //        else if ((tmpArr[i].ToString() == "empty") && (state % 2 == 1))
-        //        {
-        //            state++;
-        //            toReturn += tmpArr[i - 1].ToString();
-        //            //Console.WriteLine(tmpArr[i - 1].ToString());
-        //        }
-        //    }
-        //    return toReturn;
-        //}
-
-
-
-       
-
-      
-
+        /// <summary>
+        /// The function returns string that contains The list of periods in which this hosting unit is occupied. (First and end date for each period)
+        /// </summary>
+        /// <returns>returns string that contains The list of periods in which this hosting unit is occupied. (First and end date for each period)</returns>
+        private string printSchedule()
+        {
+            string toReturn = string.Empty; // the string to return from this function that will be contain the output 
+            ArrayList tmpArr = new ArrayList();
+            for (int i = 0; i < 12; i++)// iterate all the diary matrix and in case with some i and j if diary[i,j] is equal to true so it is  add to tmpArr the appropriate date ,otherwise it is add to tmpArr the string "empty"
+            {
+                for (int j = 0; j < 31; j++)
+                {
+                    if (Diary[i, j])
+                    {
+                        tmpArr.Add((j + 1) + "/" + (i + 1));
+                    }
+                    else
+                    {
+                        tmpArr.Add("empty");
+                    }
+                }
+            }
+            int state = 0;
+            for (int i = 0; i < tmpArr.Count; i++)// iterate tmpArr and for each sequence of dates take the first date and the last and add them to 'toReturn' string with '-' betwwen the first date and the last of every sequence and after every first date + '-' + last date add "\n"
+            {
+                if ((i == 0) && (tmpArr[i].ToString() != "empty"))//if it is the first date and also the first date in the entire tmpArr
+                {
+                    toReturn += tmpArr[i].ToString() + " - ";
+                    state++;
+                }
+                else if ((state % 2 == 0) && (tmpArr[i].ToString() != "empty"))//if it is  the first date but not the first date in the entire tmpArr
+                {
+                    toReturn += tmpArr[i].ToString() + " - ";
+                    state++;
+                }
+                else if ((state % 2 == 1) && (tmpArr[i].ToString() == "empty"))//if the last  date was before one iteration in tmpArr
+                {
+                    state++;
+                    toReturn += tmpArr[i - 1].ToString() + "\n";
+                }
+            }
+            toReturn += "\n";
+            return toReturn; 
+        }
     }
 }
