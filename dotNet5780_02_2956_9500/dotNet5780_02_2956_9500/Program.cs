@@ -79,12 +79,14 @@ namespace dotNet5780_02_2956_9500
                         {
                             //sort this host by occupancy of its units
                             host.SortUnits();
+                            //print this host detailes
+                            Console.WriteLine("**** Details of the Host with the most occupied unit:\n");
+                            Console.WriteLine(host.ToString());
+                            break;
                         }
                     }
-                    //print this host detailes
-                    Console.WriteLine("**** Details of the Host with the most occupied unit:\n");
-                    Console.WriteLine(host.ToString());
-                    break;
+                   
+
                 }
             }
             Console.ReadKey();
